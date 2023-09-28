@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url("./pexels-david-bartus-1166209.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        a {
+            text-decoration: none;
+            color: #333;
+            margin: 10px;
+            padding-top: 10px;
+            cursor: pointer;
+        }
+
+        .login-container {
+            background-color: #fff;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            overflow: hidden;
+            width: 300px;
+        }
+
+        .login-form {
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .input-container {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-bottom: 2px solid #007BFF;
+            font-size: 16px;
+            background-color: transparent;
+            transition: border-color 0.3s;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border-color: #0056b3;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <form class="login-form" onsubmit="login(event)">
+            <h1>Login</h1>
+            <div class="input-container">
+                <label for="Email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="input-container">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+            <a href="http://localhost:4000/signup">Create account..</a>
+        </form>
+    </div>
+</body>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAdo_uH3c2U0u0oOIwz9CjsVkO6lY6sw5M",
+        authDomain: "chat-bot-2cbd4.firebaseapp.com",
+        projectId: "chat-bot-2cbd4",
+        storageBucket: "chat-bot-2cbd4.appspot.com",
+        messagingSenderId: "657320861097",
+        appId: "1:657320861097:web:356dd44b73a4a8afa278b8",
+        measurementId: "G-TQ8G5KHH4E"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+
+    
+    var Email = document.getElementById("email");
+    var Pass = document.getElementById("password");
+
+    window.login = function (e) {
+        e.preventDefault();
+        var obj = {
+            Email: Email.value,
+            Password: Pass.value
+        }
+        const options = {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json', 
+            },
+            body: JSON.stringify(obj), 
+        };
+        fetch('http://localhost:3000/loginsubmit', options)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); 
+            })
+            .then(data => {
+              
+                console.log('Response from server:', data);
+            })
+            .catch(error => {
+               
+                console.error('Fetch error:', error);
+            });
+
+        signInWithEmailAndPassword(auth, obj.Email, obj.Password)
+            .then(function (success) {
+                alert("Loggined Succesfully")
+                window.location.href = "/main";
+            })
+            .catch(function (err) {
+                alert("Login error:" + err)
+            });
+    }
+</script>
+
+</html>

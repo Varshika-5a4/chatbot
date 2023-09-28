@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignUp Page</title>
+    
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url("pexels-david-bartus-1166209.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+a{
+    text-decoration: none;
+    color: #333;
+    margin: 10px;
+    padding-top: 10px;
+    cursor: pointer;
+}
+.login-container {
+    background-color: #fff;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    overflow: hidden;
+    width: 300px;
+}
+
+.login-form {
+    padding: 20px;
+}
+
+h1 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.input-container {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid #007BFF;
+    font-size: 16px;
+    background-color: transparent;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus {
+    border-color: #0056b3;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 10px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+    </style>
+    
+</head>
+<body>
+    <div class="login-container">
+        <form class="login-form" onsubmit="signup(event)">
+            <h1>Sign In</h1>
+            <div class="input-container">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-container">
+                <label for="email">Email</label>
+                <input type="email" id="email1" name="email" required>
+            </div>
+            <div class="input-container">
+                <label for="password">Password</label>
+                <input type="password" id="password1" name="password" required>
+            </div>
+            <button type="submit">Sign In</button>
+            <a href="http://localhost:4000/login">Already have an account</a>
+        </form>
+    </div>
+</body>
+<script type="module" >
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAdo_uH3c2U0u0oOIwz9CjsVkO6lY6sw5M",
+    authDomain: "chat-bot-2cbd4.firebaseapp.com",
+    projectId: "chat-bot-2cbd4",
+    storageBucket: "chat-bot-2cbd4.appspot.com",
+    messagingSenderId: "657320861097",
+    appId: "1:657320861097:web:356dd44b73a4a8afa278b8",
+    measurementId: "G-TQ8G5KHH4E"
+  };
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth();
+
+var UserName = document.getElementById("username");
+var Email12 = document.getElementById("email1");
+var Pass = document.getElementById("password1");
+
+window.signup = function (e) {
+  e.preventDefault();
+  var obj = {
+    Username: UserName.value,
+    Email: Email12.value,
+    Password: Pass.value
+  }
+  const options = {
+    method: 'POST', 
+    headers: {
+        'Content-Type': 'application/json', 
+    },
+    body: JSON.stringify(obj), 
+};
+fetch('http://localhost:3000/signupsubmit', options)
+.then(response => {
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return response.json();
+})
+.then(data => {
+
+    console.log('Response from server:', data);
+})
+.catch(error => {
+    
+    console.error('Fetch error:', error);
+});
+
+  createUserWithEmailAndPassword(auth, obj.Email, obj.Password)
+    .then(function (userCredential) {
+    
+      alert("Signup Successfull");
+      window.location.href="/login"
+      console.log(userCredential);
+    })
+    .catch(function (error) {
+      
+      alert("Error: " + error.message);
+      console.error(error);
+    });
+};
+</script>
+</html>
